@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { FaPen, FaPlus } from "react-icons/fa";
 import axios from 'axios';
 
-function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom}) {
+function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevices}) {
     const [show, setShow] = useState(false)
     const [newRoomName, setNewRoomName] = useState('')
     const [newAddress, setNewAddress] = useState('')
@@ -81,7 +81,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom}) {
                 <Dropdown label={selectedRoom.room_name} inline={true}>
                     {allRoom && allRoom.map((val, i)=>{
                         return (
-                            <Dropdown.Item key={i} onClick={()=>{setSelectedRoom(val)}}> {val.room_name} </Dropdown.Item>
+                            <Dropdown.Item key={i} onClick={()=>{setSelectedRoom(val); getDevices(val.id)}}> {val.room_name} </Dropdown.Item>
                         )
                     })} 
                 </Dropdown>

@@ -1,12 +1,40 @@
-import { Button, Label, Modal, TextInput } from 'flowbite-react';
+import { Button, Dropdown, Label, Modal, TextInput } from 'flowbite-react';
 import React, { useState } from 'react'
 import { FaPlus } from "react-icons/fa";
+import axios from 'axios';
 
-function AddDeviceBtn() {
+function AddDeviceBtn({room_id}) {
     const [show, setShow] = useState(false)
     const [name, setName] = useState('')
     const [code, setCode] = useState('')
     const [type, setType] = useState('')
+
+    const host = import.meta.env.VITE_API_HOST_LOCAL
+    const port = import.meta.env.VITE_API_PORT_LOCAL
+
+    const saveDevice = async() => {
+        const data = {
+            device_code: code,
+            user_id: 1,
+            device_name: name, 
+            device_type: type,
+            room_id
+        }
+        // console.log(data)
+        if(code != '' && name != '' && type != ''){
+            // Send Data to db
+            axios.post(`http://${host}:${port}/api/v1/device/create`, data)
+              .then(function (response) {
+                setShow(!show)
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+        } else {
+            console.log('pastikan semua telah terisi')
+        }
+    }
 
     return (
         <>
@@ -30,7 +58,7 @@ function AddDeviceBtn() {
                     <h3 className="text-xl font-medium text-gray-900 dark:text-white"> Add Device </h3>
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="name" value="Room name"/>
+                            <Label htmlFor="name" value="Device name"/>
                         </div>
                         <TextInput id="name" required={true} onChange={(e)=>{setName(e.target.value)}} value={name}/>
                     </div>
@@ -40,7 +68,17 @@ function AddDeviceBtn() {
                         </div>
                         <TextInput id="code" required={true} onChange={(e)=>{setCode(e.target.value)}} value={code}/>
                     </div>
-                    <div className="w-full" onClick={()=>{}}>
+                    <div>
+                        <div className="mb-2 block">
+                            <Label htmlFor="code" value="Device Type"/>
+                        </div>
+                        <Dropdown label={type == '' ? "Choose Type" : type} inline={true}>
+                            <Dropdown.Item onClick={()=>{setType('Lamp')}}> Lamp </Dropdown.Item>
+                            <Dropdown.Item onClick={()=>{setType('Plug')}}> Plug </Dropdown.Item>
+                            <Dropdown.Item onClick={()=>{setType('Wallswitch')}}> Wallswitch </Dropdown.Item>
+                        </Dropdown>
+                    </div>
+                    <div className="w-full" onClick={()=>{saveDevice()}}>
                         <Button> Add </Button>
                     </div>
                 </div>
