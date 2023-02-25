@@ -9,8 +9,8 @@ function AddDeviceBtn({room_id}) {
     const [code, setCode] = useState('')
     const [type, setType] = useState('')
 
-    const host = import.meta.env.VITE_API_HOST_LOCAL
-    const port = import.meta.env.VITE_API_PORT_LOCAL
+    const host = import.meta.env.VITE_API_HOST
+    const port = import.meta.env.VITE_API_PORT
 
     const saveDevice = async() => {
         const data = {

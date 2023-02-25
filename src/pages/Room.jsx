@@ -9,8 +9,8 @@ function Room() {
     const [devices, setDevices] = useState([])
     const [selectedRoom, setSelectedRoom] = useState({})
 
-    const host = import.meta.env.VITE_API_HOST_LOCAL
-    const port = import.meta.env.VITE_API_PORT_LOCAL
+    const host = import.meta.env.VITE_API_HOST
+    const port = import.meta.env.VITE_API_PORT
 
     useEffect(() => {
         getAllRoom()

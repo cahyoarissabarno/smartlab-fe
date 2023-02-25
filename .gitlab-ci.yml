@@ -1,0 +1,17 @@
+stages:
+  - deploy
+
+deploy:
+  image: ruby:2.5
+  stage: deploy
+  script:
+    - cp $DOCKER_COMPOSE docker-compose.yml
+    - echo "$STAGE_ID_RSA" > key.pem
+    - chmod 400 key.pem
+    - ssh -i key.pem -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "rm -rf smartlab-web || true"
+    - scp -i key.pem -o StrictHostKeyChecking=no -r $PWD furqon@10.0.2.7:/home/$STAGE_SERVER_USER/smartlab-web
+    - ssh -i key.pem -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "ls smartlab-web"
+    - ssh -i key.pem -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "docker-compose -f /home/$STAGE_SERVER_USER/smartlab-web/docker-compose.yml build --no-cache"
+    - ssh -i key.pem -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "docker-compose -f /home/$STAGE_SERVER_USER/smartlab-web/docker-compose.yml up -d"
+
+ 

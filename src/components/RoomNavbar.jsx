@@ -11,8 +11,8 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
     // const [selectedRoom, setSelectedRoom] = useState({})
     const [mode, setMode] = useState('')
 
-    const host = import.meta.env.VITE_API_HOST_LOCAL
-    const port = import.meta.env.VITE_API_PORT_LOCAL
+    const host = import.meta.env.VITE_API_HOST
+    const port = import.meta.env.VITE_API_PORT
 
     const saveRoom = async() => {
         const data = {
