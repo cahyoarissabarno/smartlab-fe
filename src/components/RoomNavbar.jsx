@@ -85,7 +85,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
                         )
                     })} 
                 </Dropdown>
-                {selectedRoom.address}
+                {/* {selectedRoom.address} */}
                 {/* {selectedRoom.id} */}
                 <div className='grid grid-cols-3 gap-2 sm:mx-0 my-3'>
                     <Button onClick={()=>{setShow(!show); setNewRoomName(''); setNewAddress(''); setMode('Add')}} 
