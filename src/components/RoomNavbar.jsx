@@ -19,7 +19,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
             room_name: newRoomName,
             address: newAddress
         }
-        console.log(data)
+        console.log(data, host, port)
         if(newRoomName != '' && newAddress != ''){
             // Send Data to db
             axios.post(`http://${host}:${port}/api/v1/room`, data)
