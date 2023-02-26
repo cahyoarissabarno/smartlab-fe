@@ -49,7 +49,7 @@ function Room() {
             {/* <Tabs.Group aria-label="Pills" style="pills">
                 <Tabs.Item active={true} title="Device"> */}
                     <div className='grid lg:grid-cols-3 sm:grid-cols-2 sm:mx-4'>
-                        <AddDeviceBtn room_id={selectedRoom.id}/>
+                        <AddDeviceBtn room_id={selectedRoom.id} getDevices={getDevices} />
                         {devices && devices.map((val, i)=>{
                             return (
                                 <DeviceCard key={i} data={val}/>

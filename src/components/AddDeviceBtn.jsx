@@ -1,9 +1,11 @@
-import { Button, Dropdown, Label, Modal, TextInput } from 'flowbite-react';
+import { Button, Dropdown, Label, Modal, Spinner, TextInput } from 'flowbite-react';
 import React, { useState } from 'react'
 import { FaPlus } from "react-icons/fa";
 import axios from 'axios';
 
-function AddDeviceBtn({room_id}) {
+function AddDeviceBtn({room_id, getDevices}) {
+    const [onLoad, setOnLoad] = useState(false)
+    const [messages, setMessages] = useState('')
     const [show, setShow] = useState(false)
     const [name, setName] = useState('')
     const [code, setCode] = useState('')
@@ -22,17 +24,22 @@ function AddDeviceBtn({room_id}) {
         }
         // console.log(data)
         if(code != '' && name != '' && type != ''){
+            setOnLoad(true)
             // Send Data to db
             axios.post(`http://${host}:${port}/api/v1/device/create`, data)
               .then(function (response) {
-                setShow(!show)
-                console.log(response);
+                getDevices(room_id).then(() => {
+                    setShow(!show)
+                    setOnLoad(false)
+                    setMessages('')
+                })
               })
               .catch(function (error) {
-                console.log(error);
+                setOnLoad(false)
+                setMessages(`${error}`)
               });
         } else {
-            console.log('pastikan semua telah terisi')
+            setMessages('pastikan semua telah terisi')
         }
     }
 
@@ -56,6 +63,7 @@ function AddDeviceBtn({room_id}) {
             <Modal.Body>
                 <div className="space-y-6 px-0 pb-4 sm:pb-6 lg:px-8 xl:pb-8 my-auto">
                     <h3 className="text-xl font-medium text-gray-900 dark:text-white"> Add Device </h3>
+                    {messages}
                     <div>
                         <div className="mb-2 block">
                             <Label htmlFor="name" value="Device name"/>
@@ -80,6 +88,12 @@ function AddDeviceBtn({room_id}) {
                     </div>
                     <div className="w-full" onClick={()=>{saveDevice()}}>
                         <Button> Add </Button>
+                        <Button color="gray">
+                            <Spinner aria-label="Alternate spinner button example" />
+                            <span className="pl-3">
+                                Loading...
+                            </span>
+                        </Button>
                     </div>
                 </div>
             </Modal.Body>
