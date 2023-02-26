@@ -87,13 +87,16 @@ function AddDeviceBtn({room_id, getDevices}) {
                         </Dropdown>
                     </div>
                     <div className="w-full" onClick={()=>{saveDevice()}}>
-                        <Button> Add </Button>
-                        <Button color="gray">
-                            <Spinner aria-label="Alternate spinner button example" />
-                            <span className="pl-3">
-                                Loading...
-                            </span>
-                        </Button>
+                        { onLoad ?
+                            <Button color="gray">
+                                <Spinner aria-label="Alternate spinner button example" />
+                                <span className="pl-3">
+                                    Loading...
+                                </span>
+                            </Button>
+                        :
+                            <Button> Add </Button>
+                        }
                     </div>
                 </div>
             </Modal.Body>

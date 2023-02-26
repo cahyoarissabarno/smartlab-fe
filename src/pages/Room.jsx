@@ -52,7 +52,7 @@ function Room() {
                         <AddDeviceBtn room_id={selectedRoom.id} getDevices={getDevices} />
                         {devices && devices.map((val, i)=>{
                             return (
-                                <DeviceCard key={i} data={val}/>
+                                <DeviceCard key={i} data={val} address={selectedRoom.address}/>
                             )
                         })}
                     </div>

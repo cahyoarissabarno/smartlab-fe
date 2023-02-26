@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function DeviceCard({data}) {
+function DeviceCard({data, address}) {
     const navigate = useNavigate()
 
     return (
-        <button className='text-left' onClick={()=>navigate("/device", {state: data})}>
+        <button className='text-left' onClick={()=>navigate("/device", {state: {data, address}})}>
             <div className="flex m-4 overflow-hidden bg-gray-50 rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition ease-in-out duration-650 dark:bg-gray-800">
                 {/* <div className="w-1/3 bg-cover" style={{ backgroundImage: `url(${"https://images.unsplash.com/photo-1494726161322-5360d4d0eeae?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"})`}}></div> */}
                 {/* <div className="w-1/3 bg-cover"></div> */}

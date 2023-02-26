@@ -1,5 +1,7 @@
+import { data } from 'autoprefixer';
+import axios from 'axios';
 import { Button, Pagination, Table } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import DeviceDetail from '../components/DeviceDetail';
@@ -9,8 +11,31 @@ function DeviceDetails() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [data, setData] = useState(location.state)
+  const host = import.meta.env.VITE_API_HOST
+  const port = import.meta.env.VITE_API_PORT
+
+  const [data, setData] = useState(location.state.data)
   const [onEdit, setOnEdit] = useState(false)
+  const [history, setHistory] = useState([])
+
+    useEffect(() => {
+        getHistory()
+    }, [])
+
+    const getHistory = () => {
+        const payload = {
+            address: location.state.address,
+            device_id: data.id
+        }
+        axios.post(`http://${host}:${port}/api/v1/history`, payload)
+        .then(function (res) {
+            setHistory(res.data)
+            console.log(res.data);
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+    }
 
   return (
     <div className='bg-gradient-to-b from-sky-100 to-gray-100 p-5 h-screen'>
@@ -64,10 +89,8 @@ function DeviceDetails() {
                   </div>
                   <Table hoverable={true}>
                       <Table.Head>
-                          <Table.HeadCell> Product name </Table.HeadCell>
-                          <Table.HeadCell> Color </Table.HeadCell>
-                          <Table.HeadCell> Category </Table.HeadCell>
-                          <Table.HeadCell> Price </Table.HeadCell>
+                          <Table.HeadCell> Time </Table.HeadCell>
+                          <Table.HeadCell> Command </Table.HeadCell>
                           {/* <Table.HeadCell>
                               <span className="sr-only">
                                   Edit
@@ -75,15 +98,17 @@ function DeviceDetails() {
                           </Table.HeadCell> */}
                       </Table.Head>
                       <Table.Body className="divide-y">
-                          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> Apple MacBook Pro 17" </Table.Cell>
-                              <Table.Cell> Sliver </Table.Cell>
-                              <Table.Cell> Laptop </Table.Cell>
-                              <Table.Cell> $2999 </Table.Cell>
-                              {/* <Table.Cell>
-                                  <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500"> Edit </a>
-                              </Table.Cell> */}
-                          </Table.Row>
+                        {history && history.map((val, i)=>{
+                            return (
+                                <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {val.date} </Table.Cell>
+                                    <Table.Cell> {`${JSON.stringify(val.message)}`} </Table.Cell>
+                                    {/* <Table.Cell>
+                                        <a href="/tables" className="font-medium text-blue-600 hover:underline dark:text-blue-500"> Edit </a>
+                                    </Table.Cell> */}
+                                </Table.Row>
+                            )
+                        })}                  
                       </Table.Body>
                   </Table>
                   <div className="flex mt-3 items-center justify-center text-center">
