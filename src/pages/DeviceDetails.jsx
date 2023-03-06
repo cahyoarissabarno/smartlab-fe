@@ -193,7 +193,12 @@ function DeviceDetails() {
                     }
                   </Table>
                   <div className="flex mt-3 items-center justify-center text-center">
-                      <Pagination currentPage={page} onPageChange={(p)=>changePage(p)} totalPages={Math.ceil(history[0].length/5)}/>
+                    {/* {console.log(history[0] ? history[0] :'gk ada')} */}
+                      <Pagination 
+                        currentPage={page} 
+                        onPageChange={(p)=>changePage(p)} 
+                        totalPages={history[0] ? Math.ceil(history[0].length/5) : 10}
+                    />
                   </div>
               </div>
               <Modal show={show} size="md" popup={true} onClose={()=>setShow(!show)} className='h-screen'>
