@@ -13,7 +13,7 @@ function Room() {
     const port = import.meta.env.VITE_API_PORT
 
     useEffect(() => {
-        console.log(`http://${host}:${port}/api/v1/room`)
+        console.log(import.meta.env.VITE_API_HOST)
         getAllRoom()
     }, [])
 
