@@ -5,9 +5,10 @@ COPY . .
 RUN touch ./.env
 RUN npm install
 EXPOSE 5173
-# RUN npm run build
+RUN npm run build
 # RUN cp -a dist/. public/
-CMD npm run dev 
+# CMD npm run dev 
+CMD npm run preview
 
 
 
