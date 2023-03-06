@@ -2,7 +2,7 @@ FROM node:16.5.0
 RUN mkdir /app
 WORKDIR /app
 COPY . .
-RUN touch ./.env
+RUN touch ./.env.production
 RUN npm install
 # EXPOSE 5173
 EXPOSE 4173
