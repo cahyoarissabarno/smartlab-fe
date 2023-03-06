@@ -26,7 +26,7 @@ function AddDeviceBtn({room_id, getDevices}) {
         if(code != '' && name != '' && type != ''){
             setOnLoad(true)
             // Send Data to db
-            axios.post(`http://${host}:${port}/api/v1/device/create`, data)
+            axios.post(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/device/create`, data)
               .then(function (response) {
                 getDevices(room_id).then(() => {
                     setShow(!show)

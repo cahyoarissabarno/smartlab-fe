@@ -13,12 +13,12 @@ function Room() {
     const port = import.meta.env.VITE_API_PORT
 
     useEffect(() => {
-        console.log(import.meta.env.VITE_API_HOST)
+        // console.log(import.meta.env.VITE_API_HOST)
         getAllRoom()
     }, [])
 
     const getAllRoom = async() => {
-        axios.get(`http://${host}:${port}/api/v1/room`)
+        axios.get(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room`)
         .then(function (res) {
             getDevices(res.data.data[0].id)
             setAllRoom(res.data.data)
@@ -31,7 +31,7 @@ function Room() {
     }
 
     const getDevices = async(id) => {
-        axios.get(`http://${host}:${port}/api/v1/device/room/${id}`)
+        axios.get(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/device/room/${id}`)
         .then(function (res) {
             setDevices(res.data.data)
             console.log(res.data.data);

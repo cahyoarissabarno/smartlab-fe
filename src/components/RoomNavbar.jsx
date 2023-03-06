@@ -22,7 +22,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
         console.log(data, host, port)
         if(newRoomName != '' && newAddress != ''){
             // Send Data to db
-            axios.post(`http://${host}:${port}/api/v1/room`, data)
+            axios.post(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room`, data)
               .then(function (response) {
                 setShow(!show)
                 getAllRoom()
@@ -44,7 +44,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
         console.log({data,id: selectedRoom.id})
         if(newRoomName != '' && newAddress != ''){
             // Send Data to db
-            axios.put(`http://${host}:${port}/api/v1/room/${selectedRoom.id}`, data)
+            axios.put(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room/${selectedRoom.id}`, data)
               .then(function (response) {
                 setShow(!show)
                 getAllRoom()
@@ -59,7 +59,7 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
     }
 
     const deleteRoom = async() => {
-        axios.delete(`http://${host}:${port}/api/v1/room/${selectedRoom.id}`)
+        axios.delete(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room/${selectedRoom.id}`)
             .then(function (response) {
                 setShow(!show)
                 getAllRoom()

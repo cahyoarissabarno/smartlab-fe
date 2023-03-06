@@ -81,7 +81,7 @@ function DeviceDetails() {
             page 
         }
         setOnLoad(true)
-        axios.post(`http://${host}:${port}/api/v1/history`, payload)
+        axios.post(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/history`, payload)
         .then(function (res) {
             setHistory(res.data)
             setOnLoad(false)
