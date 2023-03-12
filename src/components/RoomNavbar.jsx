@@ -6,7 +6,7 @@ import axios from 'axios';
 function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevices}) {
     const [show, setShow] = useState(false)
     const [newRoomName, setNewRoomName] = useState('')
-    const [newAddress, setNewAddress] = useState('')
+    // const [newAddress, setNewAddress] = useState('')
     // const [allRoom, setAllRoom] = useState([])
     // const [selectedRoom, setSelectedRoom] = useState({})
     const [mode, setMode] = useState('')
@@ -16,11 +16,11 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
 
     const saveRoom = async() => {
         const data = {
-            room_name: newRoomName,
-            address: newAddress
+            room_name: newRoomName
+            // address: newAddress
         }
         console.log(data, host, port)
-        if(newRoomName != '' && newAddress != ''){
+        if(newRoomName != ''){
             // Send Data to db
             axios.post(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room`, data)
               .then(function (response) {
@@ -38,11 +38,10 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
 
     const updateRoom = async() => {
         const data = {
-            new_name: newRoomName,
-            new_address: newAddress
+            new_name: newRoomName
         }
         console.log({data,id: selectedRoom.id})
-        if(newRoomName != '' && newAddress != ''){
+        if(newRoomName != ''){
             // Send Data to db
             axios.put(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/room/${selectedRoom.id}`, data)
               .then(function (response) {
@@ -85,14 +84,14 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
                         )
                     })} 
                 </Dropdown>
-                {/* {selectedRoom.address} */}
+                {selectedRoom.address}
                 {/* {selectedRoom.id} */}
                 <div className='grid grid-cols-3 gap-2 sm:mx-0 my-3'>
-                    <Button onClick={()=>{setShow(!show); setNewRoomName(''); setNewAddress(''); setMode('Add')}} 
+                    <Button onClick={()=>{setShow(!show); setNewRoomName(''); setMode('Add')}} 
                         className='!py-0 !px-0 !h-10 !w-10 !bg-blue-900 hover:!bg-blue-800 !rounded-full shadow-md hover:shadow-xl hover:scale-110 transition ease-in-out duration-650'>
                         <FaPlus className='h-4 w-4 text-gray-50'/>
                     </Button>
-                    <Button onClick={()=>{setShow(!show); setNewRoomName(selectedRoom.room_name); setNewAddress(selectedRoom.address); setMode('Edit')}}
+                    <Button onClick={()=>{setShow(!show); setNewRoomName(selectedRoom.room_name); setMode('Edit')}}
                         className='!py-0 !px-0 !h-10 !w-10 !bg-blue-900 hover:!bg-blue-800 !rounded-full shadow-md hover:shadow-xl hover:scale-105 transition ease-in-out duration-650'>
                         <FaPen className='h-4 w-4 text-gray-50'/>
                     </Button>
@@ -115,12 +114,12 @@ function RoomNavbar({selectedRoom, allRoom, setSelectedRoom, getAllRoom, getDevi
                             </div>
                             <TextInput id="name" required={true} onChange={(e)=>{setNewRoomName(e.target.value)}} value={newRoomName}/>
                         </div>
-                        <div>
+                        {/* <div>
                             <div className="mb-2 block">
                                 <Label htmlFor="address" value="Blockchain Address"/>
                             </div>
                             <TextInput id="address" required={true} onChange={(e)=>{setNewAddress(e.target.value)}} value={newAddress}/>
-                        </div>
+                        </div> */}
                         {mode == 'Add' ? 
                             <div className="w-full" onClick={()=>{saveRoom()}}>
                                 <Button> Add </Button>
