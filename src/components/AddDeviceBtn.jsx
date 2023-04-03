@@ -84,6 +84,7 @@ function AddDeviceBtn({room_id, getDevices}) {
                             <Dropdown.Item onClick={()=>{setType('Lamp')}}> Lamp </Dropdown.Item>
                             <Dropdown.Item onClick={()=>{setType('Plug')}}> Plug </Dropdown.Item>
                             <Dropdown.Item onClick={()=>{setType('Wallswitch')}}> Wallswitch </Dropdown.Item>
+                            <Dropdown.Item onClick={()=>{setType('Wallsocket')}}> Wallsocket </Dropdown.Item>
                         </Dropdown>
                     </div>
                     <div className="w-full" onClick={()=>{saveDevice()}}>

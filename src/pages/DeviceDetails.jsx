@@ -1,12 +1,12 @@
-import { data } from 'autoprefixer';
+// import { data, data } from 'autoprefixer';
 import axios from 'axios';
-import { Button, Modal, Pagination, Spinner, Table, Tabs } from 'flowbite-react';
+import { Button, Dropdown, Modal, Pagination, Spinner, Table, Tabs } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Web3 from 'web3';
 import {BsEyeFill} from 'react-icons/bs'
-import {AiFillLock, AiFillUnlock} from 'react-icons/ai'
+import {AiFillLock, AiFillUnlock, AiOutlineWarning} from 'react-icons/ai'
 
 const web3 = new Web3()
 
@@ -18,8 +18,9 @@ function DeviceDetails() {
   const port = import.meta.env.VITE_API_PORT
 
   const [onLoad, setOnLoad] = useState(false)
-  const [data, setData] = useState(location.state.data)
   const [onEdit, setOnEdit] = useState(false)
+  const [onDelete, setOnDelete] = useState(false)
+  const [data, setData] = useState(location.state.data)
   const [history, setHistory] = useState([])
   const [page, setPage] = useState(1)
   const [show, setShow] = useState(false)
@@ -74,6 +75,42 @@ function DeviceDetails() {
         setDecoded(decodedData)
     }
 
+    const deleteDevice = async() => {
+        axios.delete(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/device/${data.id}`)
+            .then(function (response) {
+                console.log(response);
+                navigate("/")
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const updateDevice = async() => {
+        console.log('data', data)
+        const newData = {
+            device_code: data.device_code,
+            user_id: data.user_id,
+            device_name: data.device_name, 
+            device_type: data.device_type,
+            room_id: data.room_id
+        }
+        console.log(newData)
+        console.log(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/device/${data.id}`)
+        if(newData){
+            axios.put(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/device/${data.id}`, newData)
+              .then(function (response) {
+                setOnEdit(!onEdit)
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+        } else {
+            console.log('pastikan semua telah terisi')
+        }
+    }
+
     const getHistory = () => {
         const payload = {
             address: location.state.address,
@@ -110,36 +147,47 @@ function DeviceDetails() {
                   <div className="space-y-2 px-0 md:my-7 my-auto md:static flex flex-wrap">
                       <div className='flex lg:flex-row md:flex-col flex-row'>
                           <span className='text-sm mr-1.5 my-auto'>Name : </span>
-                          <input id="name" type={Text} value={data.device_name} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
+                          <input id="name" type="text" onChange={(e)=>{setData({...data, device_name: e.target.value})}} value={data.device_name} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
                       </div>
                       <div className='flex lg:flex-row md:flex-col flex-row'>
                           <span className='text-sm mr-1.5 my-auto'>Code : </span>
-                          <input id="name" type={Text} value={data.device_code} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
+                          <input id="name" type="text" onChange={(e)=>{setData({...data, device_code: e.target.value})}} value={data.device_code} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
                       </div>
                       <div className='flex lg:flex-row md:flex-col flex-row'>
                           <span className='text-sm mr-1.5 my-auto'>Room : </span>
-                          <input id="name" type={Text} value={data.room_id} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
+                          <input id="name" type="text" onChange={(e)=>{setData({...data, room_id: e.target.value})}} value={data.room_id} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
                       </div>
                       <div className='flex lg:flex-row md:flex-col flex-row'>
                           <span className='text-sm mr-1.5 my-auto'>Type : </span>
-                          <input id="name" type={Text} value={data.device_type} className={`${onEdit ? 'bg-gray-50 outline outline-1' : 'bg-gray-200 outline-none'} rounded-lg py-0.5 px-2.5 text-sm mr-5`} disabled={onEdit ? "" : "disabled"}/>
+                          {onEdit ? 
+                            <div className={`!bg-gray-50 outline outline-1 !rounded-lg !py-0.5 !px-2.5 !text-sm mr-5`}>
+                                <Dropdown label={data.device_type} inline={true} dismissOnClick={true}>
+                                    <Dropdown.Item onClick={()=>{setData({...data, device_type: 'Lamp'})}}> Lamp </Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>{setData({...data, device_type: 'Plug'})}}> Plug </Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>{setData({...data, device_type: 'Wallswitch'})}}> Wallswitch </Dropdown.Item>
+                                    <Dropdown.Item onClick={()=>{setData({...data, device_type: 'Wallsocket'})}}> Wallsocket </Dropdown.Item>
+                                </Dropdown>
+                            </div>
+                            : 
+                            <input id="name" type="text" placeholder={data.device_type} className={`bg-gray-200 outline-none rounded-lg py-0.5 px-2.5 text-sm mr-5 placeholder-black`}/>
+                          }
                       </div>
                   </div>
                   <div className="w-full flex flex-row space-x-3 py-3">
                       <Button color="dark" onClick={()=>navigate("/")}>Back</Button>
                       { onEdit ? 
                         <div className='flex flex-row space-x-3'>
-                          <Button>Save</Button>
-                          <Button color="warning" onClick={()=>{setOnEdit(!onEdit)}}>Cancel</Button>
+                          <Button onClick={()=>{updateDevice()}}>Save</Button>
+                          <Button color="warning" onClick={()=>{setOnEdit(!onEdit); setData(location.state.data)}}>Cancel</Button>
                         </div>
                         :
                         <Button onClick={()=>{setOnEdit(!onEdit)}}> Edit </Button>
                       }
-                      <Button color="failure"> Delete </Button>
+                      <Button color="failure" onClick={()=>{setOnDelete(true)}}> Delete </Button>
                   </div>
               </div>
 
-              {/* Table */}
+              {/* Blockchain Data Table */}
               <div className='md:w-8/12 w-full md:-my-6'>
                   {/* <div className='flex flex-row h-14'>
                       <input type="date" placeholder="John Doe" class="block my-2 mx-1 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
@@ -154,7 +202,8 @@ function DeviceDetails() {
                         <Table.HeadCell> Data </Table.HeadCell>
                         <Table.HeadCell></Table.HeadCell>
                     </Table.Head>
-                    { onLoad ?
+                        <Table.Body className="divide-y">
+                        { onLoad ?
                         <Table.Row>
                             <Table.Cell>
                                 <div className='text-center py-5'>
@@ -173,9 +222,7 @@ function DeviceDetails() {
                                 </div>
                             </Table.Cell>
                         </Table.Row>
-                        :
-                        <Table.Body className="divide-y">
-                        {history && history.map((val, i)=>{
+                        : history && history.map((val, i)=>{
                             return (
                                 <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {new Date(val.date).toUTCString()} </Table.Cell>
@@ -190,7 +237,6 @@ function DeviceDetails() {
                             )
                         })}                  
                         </Table.Body>
-                    }
                   </Table>
                   <div className="flex mt-3 items-center justify-center text-center">
                     {/* {console.log(history[0] ? history[0] :'gk ada')} */}
@@ -201,7 +247,9 @@ function DeviceDetails() {
                     />
                   </div>
               </div>
-              <Modal show={show} size="md" popup={true} onClose={()=>setShow(!show)} className='h-screen'>
+
+            {/* Blockchain Detail Data Modal */}
+            <Modal show={show} size="md" popup={true} onClose={()=>setShow(!show)} className='h-screen'>
                 <Modal.Header />
                 <Modal.Body>
                     <Tabs.Group aria-label="Tabs with icons" style="underline" className='-mt-4'>
@@ -254,6 +302,27 @@ function DeviceDetails() {
                         </div>
                     </Tabs.Item>
                     </Tabs.Group>
+                </Modal.Body>
+            </Modal>
+
+            {/* Delete Confirmation Modal */}
+            <Modal show={onDelete} size="md" popup={true} onClose={()=>setOnDelete(false)} className='h-screen'>
+                <Modal.Header />
+                <Modal.Body>
+                <div className="text-center">
+                    <AiOutlineWarning className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                        Are you sure you want to delete this device ?
+                    </h3>
+                    <div className="flex justify-center gap-4">
+                    <Button color="failure" onClick={()=>{ deleteDevice() }}>
+                        Yes, I'm sure
+                    </Button>
+                    <Button color="gray" onClick={()=>setOnDelete(false)}>
+                        No, cancel
+                    </Button>
+                    </div>
+                </div>
                 </Modal.Body>
             </Modal>
           </div>
