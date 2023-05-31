@@ -43,4 +43,4 @@ function FullscreenToggle() {
     )
 }
 
-export default DeviceCard
+export default FullscreenToggle
