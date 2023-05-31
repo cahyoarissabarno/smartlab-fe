@@ -3,10 +3,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import DeviceDetails from './pages/DeviceDetails'
 import Room from './pages/Room'
+import FullscreenToggle from './components/FullscreenToggle'
 // import RoomDetails from './pages/RoomDetails'
 
 function App() {
-
   return (
     // <div className="App">
 
@@ -17,6 +17,7 @@ function App() {
         {/* <Route path='/room' element={<RoomDetails/>} /> */}
         <Route path='/device' element={<DeviceDetails/>} />
       </Routes>
+      <FullscreenToggle/>
     </BrowserRouter>
   )
 }

@@ -130,6 +130,15 @@ function DeviceDetails() {
         });
     }
 
+    const parseMessage = (data) => {
+        const type = data[0].code
+        if(type != 'countdown_1'){
+            return `The device is turned ${data[0].value == true ? 'on' : 'off'}`
+        } else {
+            return `The device is scheduled to turn on ${data[0].value} seconds from now`
+        }
+    }
+
     const changePage = async (page) => {
         setPage(page)
         getHistory()
@@ -253,6 +262,7 @@ function DeviceDetails() {
                 <Modal.Header />
                 <Modal.Body>
                     <Tabs.Group aria-label="Tabs with icons" style="underline" className='-mt-4'>
+                    {/* Encrypted */}
                     <Tabs.Item active={true} title="Encrypted" icon={ AiFillLock }>
                         <div className="space-y-2 px-0 my-auto md:static flex flex-col">
                             <div className='flex flex-wrap'>
@@ -277,6 +287,8 @@ function DeviceDetails() {
                             </div>
                         </div>
                     </Tabs.Item>
+
+                    {/* Decripted */}
                     <Tabs.Item title="Decrypted" icon={ AiFillUnlock }>
                         <div className="space-y-2 px-0 my-auto md:static flex flex-col">
                             {/* <div className='flex flex-wrap'>
@@ -287,13 +299,14 @@ function DeviceDetails() {
                                 <span className='text-sm mr-1.5 my-auto font-bold'>Device ID : </span>
                                 <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{decoded.device_id}</span>
                             </div>
-                            <div className='flex flex-wrap'>
+                            {/* <div className='flex flex-wrap'>
                                 <span className='text-sm mr-1.5 my-auto font-bold'>From : </span>
                                 <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{decoded.from}</span>
-                            </div>
+                            </div> */}
                             <div className='flex flex-col'>
                                 <span className='text-sm mr-1.5 my-auto font-bold'>Message : </span>
-                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}><pre> {decoded.message && JSON.stringify(JSON.parse(web3.utils.hexToUtf8(decoded.message)).commands, null, 2)} </pre> </span>
+                                {/* <span className={`py-0.5 px-1 text-sm mr-5 break-all`}><pre> {decoded.message && JSON.stringify(JSON.parse(web3.utils.hexToUtf8(decoded.message)).commands, null, 2)} </pre> </span> */}
+                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{decoded.message && parseMessage(JSON.parse(web3.utils.hexToUtf8(decoded.message)).commands)}</span>
                             </div>
                             <div className='flex flex-wrap'>
                                 <span className='text-sm mr-1.5 my-auto font-bold'>Date : </span>
