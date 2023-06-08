@@ -26,6 +26,8 @@ function DeviceDetails() {
   const [show, setShow] = useState(false)
   const [selected, setSelected] = useState({})
   const [decoded, setDecoded] = useState({})
+  const [fromDate, setFromDate] = useState(Date.now())
+  const [toDate, setToDate] = useState(Date.now())
 
     useEffect(() => {
         getHistory()
@@ -130,6 +132,27 @@ function DeviceDetails() {
         });
     }
 
+    const getHistoryByDate = () => {
+        const payload = {
+            address: location.state.address,
+            device_id: data.id,
+            page,
+            fromDate,
+            toDate 
+        }
+        setOnLoad(true)
+        axios.post(`http://${host ? host : '103.106.72.182'}:${port ? port : '36004'}/api/v1/history/date`, payload)
+        .then(function (res) {
+            setHistory(res.data)
+            setOnLoad(false)
+            // console.log(res.data);
+        })
+        .catch(function (err) {
+            console.log(err);
+            setOnLoad(false)
+        });
+    }
+
     const parseMessage = (data) => {
         const type = data[0].code
         if(type != 'countdown_1'){
@@ -198,13 +221,16 @@ function DeviceDetails() {
 
               {/* Blockchain Data Table */}
               <div className='md:w-8/12 w-full md:-my-6'>
-                  {/* <div className='flex flex-row h-14'>
-                      <input type="date" placeholder="John Doe" class="block my-2 mx-1 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
-                      <input type="text" placeholder="Username" class="block my-2 mx-1 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
-                      <button class="my-2 px-6 mx-1 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-900 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                      {/* <p>{`${fromDate} - ${toDate}`}</p> */}
+                  <div className='flex flex-row h-14 content-center'>
+                      {/* Search by Date */}
+                      <input type="date" onChange={(e)=>{setFromDate(new Date(e.target.value).getTime())}} class="block my-2 mx-1 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
+                      <span className='my-auto px-2'> to </span>
+                      <input type="date"onChange={(e)=>{setToDate((new Date(e.target.value).getTime())+86400000)}} class="block my-2 mx-1 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
+                      <button onClick={()=>{getHistoryByDate()}} class="my-2 px-6 mx-1 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-900 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
                           Search
                       </button>
-                  </div> */}
+                  </div>
                   <Table hoverable={true}>
                     <Table.Head>
                         <Table.HeadCell> Time </Table.HeadCell>
@@ -252,7 +278,8 @@ function DeviceDetails() {
                       <Pagination 
                         currentPage={page} 
                         onPageChange={(p)=>changePage(p)} 
-                        totalPages={history[0] ? Math.ceil(history[0].length/5) : 10}
+                        // totalPages={history[0] ? Math.ceil(history[0].length/5) : 10}
+                        totalPages={10}
                     />
                   </div>
               </div>
