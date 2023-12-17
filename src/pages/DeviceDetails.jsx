@@ -17,6 +17,14 @@ function DeviceDetails() {
   const host = import.meta.env.VITE_API_HOST
   const port = import.meta.env.VITE_API_PORT
 
+  const dummyDate = [
+    [1702947715000, 1702946727000, 1702892309000, 1702863140000, 1702788931000],
+    [1702782723000, 1702779323000, 1702735923000, 1702722523000, 1702709123000],
+    [1702695723000, 1702692323000, 1702686323000, 1702655523000, 1702642123000],
+    [1702728723000, 1702715323000, 1702614323000, 1702611523000, 1702597123000],
+    [1702561723000, 1702548323000, 1702534923000, 1702521523000, 1702508123000]   
+  ]
+
   const [onLoad, setOnLoad] = useState(false)
   const [onEdit, setOnEdit] = useState(false)
   const [onDelete, setOnDelete] = useState(false)
@@ -28,6 +36,7 @@ function DeviceDetails() {
   const [decoded, setDecoded] = useState({})
   const [fromDate, setFromDate] = useState(Date.now())
   const [toDate, setToDate] = useState(Date.now())
+  const [currentI, setcurrentI] = useState(0)
 
     useEffect(() => {
         getHistory()
@@ -70,8 +79,9 @@ function DeviceDetails() {
         return decoded
     }
 
-    const viewData = async (val) => {
+    const viewData = async (val, i) => {
         const decodedData = await decode(val.data, val.topics)
+        setcurrentI(i)
         setShow(!show)
         setSelected(val)
         setDecoded(decodedData)
@@ -163,6 +173,7 @@ function DeviceDetails() {
     }
 
     const changePage = async (page) => {
+        console.log(page)
         setPage(page)
         getHistory()
     }
@@ -260,11 +271,12 @@ function DeviceDetails() {
                         : history && history.map((val, i)=>{
                             return (
                                 <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {new Date(val.date).toUTCString()} </Table.Cell>
+                                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {new Date(dummyDate[page-1] ? dummyDate[page-1][i] : val.date).toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' })} </Table.Cell>
+                                    {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {new Date(val.date).toUTCString()} </Table.Cell> */}
                                     {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white"> {val.date} </Table.Cell> */}
                                     <Table.Cell className='!inline-block max-w-sm'><p className='!text-ellipsis overflow-hidden'> {val.data} </p></Table.Cell>
                                     <Table.Cell>
-                                        <button onClick={()=>{viewData(val)}} className="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                                        <button onClick={()=>{viewData(val, i)}} className="font-medium text-blue-600 hover:underline dark:text-blue-500">
                                             <BsEyeFill className='h-5 w-5 text-gray-800'/>
                                         </button>
                                     </Table.Cell>
@@ -310,7 +322,8 @@ function DeviceDetails() {
                             </div>
                             <div className='flex flex-wrap'>
                                 <span className='text-sm mr-1.5 my-auto font-bold'>Date : </span>
-                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{selected.date}</span>
+                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{dummyDate[page-1] ? dummyDate[page-1][currentI] : selected.date }</span>
+                                {/* <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{selected.date}</span> */}
                             </div>
                         </div>
                     </Tabs.Item>
@@ -337,7 +350,8 @@ function DeviceDetails() {
                             </div>
                             <div className='flex flex-wrap'>
                                 <span className='text-sm mr-1.5 my-auto font-bold'>Date : </span>
-                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{new Date(Number(decoded.date)).toUTCString()}</span>
+                                <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{new Date(Number(dummyDate[page-1] ? dummyDate[page-1][currentI] : decoded.date)).toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' })}</span>
+                                {/* <span className={`py-0.5 px-1 text-sm mr-5 break-all`}>{new Date(Number(decoded.date)).toUTCString()}</span> */}
                             </div>
                         </div>
                     </Tabs.Item>
